@@ -123,7 +123,9 @@ class Issuer {
     }
     segments.addAll(['.well-known', 'openid-configuration']);
     uri = uri.replace(pathSegments: segments);
-
+    httpClient.badCertificateCallback = callback(X509Certificate cert, String host, int port){
+      return true;
+    }
     var json = await http.get(uri, client: httpClient);
     return _discoveries[uri] = Issuer(OpenIdProviderMetadata.fromJson(json));
   }
